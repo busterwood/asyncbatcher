@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>BusterWood.AsyncBatcher</id>
+    <version>1.0.0</version>
+    <authors>BusterWood</authors>
+    <description>Turns many async calls into less async calls with many parameters.  Useful for batching together many simple database calls into more chunky batches</description>
+    <projectUrl>https://github.com/busterwood/asyncbatcher</projectUrl>
+    <licenseUrl>https://github.com/busterwood/asyncbatcher/blob/master/LICENSE.txt</licenseUrl>
+    <references>
+      <reference file="BusterWood.AsyncBatcher.dll" />
+    </references>
+  </metadata>
+  <files>
+    <file src="Bin\Release\BusterWood.AsyncBatcher.dll" target="lib\net45"/>
+    <file src="Bin\Release\BusterWood.AsyncBatcher.xml" target="lib\net45"/>
+  </files>
+</package>

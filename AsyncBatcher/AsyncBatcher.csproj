@@ -50,6 +50,7 @@
     <Compile Include="SingleResultAsyncBatcher.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="AsyncBatcher.nuspec" />
     <None Include="asyncbatcher.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
