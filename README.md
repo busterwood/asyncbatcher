@@ -26,7 +26,11 @@ public class OrderDataAccess
 }
 ```
 
-The `FindByIdAsync` is fine for one-at-a-time order loading, but what if you had hunderds or thousands of asynchonous tasks all reading at the same time?  This is where async batching comes in, for example:
+The `FindByIdAsync` is fine for one-at-a-time order loading, but what if you had hunderds or thousands of asynchonous tasks all reading at the same time?  This is where async batching comes in, grouping to together calls for efficency based on batching time, e.g. group toegther calls for 100ms (the default).
+
+Using `SingleResultAsyncBatcher` or `MultiResultAsyncBatcher` you can reduce thousands of database calls into tens of calls.
+
+Here is an example of batching the above OrderDataAccess call:
 
 ```csharp
 ...
