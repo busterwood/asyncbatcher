@@ -1,6 +1,12 @@
 # AsyncBatcher
 Batches multiple async calls into one or more batched calls, which is useful for batching together database reads.
 
+Batching database calls helps in three ways:
+
+1. reduced network calls to the database
+2. reduced database load due to more efficent use of the database
+3. reduced number of connections to the database, helping to avoid database connection pool exhaustion.
+
 For example, say you have a data access layer for _orders_ that gets an order via an integer id:
 ```csharp
 ...
@@ -27,7 +33,7 @@ public class OrderDataAccess
 }
 ```
 
-The `FindByIdAsync` is fine for one-at-a-time order loading, but what if you had hunderds or thousands of asynchonous tasks all reading at the same time?  This is where async batching comes in, grouping to together calls for efficency based on batching time, e.g. group toegther calls for 100ms (the default).
+The `FindByIdAsync` is fine for one-at-a-time order loading, but what if you had hunderds or thousands of asynchonous tasks all reading at the same time?  This is where async batching comes in, grouping to together calls for efficency based on batching time, e.g. group toegther calls for 100ms (the default).  
 
 Using `SingleResultAsyncBatcher` or `MultiResultAsyncBatcher` you can reduce thousands of database calls into tens of calls.
 
