@@ -48,14 +48,14 @@ public class OrderDataAccess
     return await _orderBatcher.QueryAsync(orderId);
   }
 
-  private async Task<ILookup<Order>> FindByManyIdsAsync(IReadOnlyCollection<int> orderIds) 
+  private async Task<Dictionary<int, Order>> FindByManyIdsAsync(IReadOnlyCollection<int> orderIds) 
   {
     // use a SQL Server Table-Valued-Parameter
     var idsTable = orderIds.ToTableType(new [] { new SqlMetaData("ID", SqlType.Int) }, "IdType");
     using (var cnn = new SqlConnection(_connectionString))
     {
       await cnn.OpenAsync();
-      return await cnn.Query<Order>("select * from [order] o join @idsTable ids on ids.id = o.id", new {idsTable}).ToLookupAsync();
+      return await cnn.Query<Order>("select * from [order] o join @idsTable ids on ids.id = o.id", new {idsTable}).ToDictionaryAsync(ord => ord.Id);
     }
   }
 }
