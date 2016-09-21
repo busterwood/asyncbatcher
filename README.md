@@ -59,7 +59,7 @@ public class OrderDataAccess
     using (var cnn = new SqlConnection(_connectionString))
     {
       await cnn.OpenAsync();
-      return await cnn.Query<Order>("select * from [order] o join @idsTable ids on ids.id = o.id", new {idsTable}).ToDictionaryAsync(ord => ord.Id);
+      return await cnn.Query<Order>("select o.* from [order] o join @idsTable ids on ids.id = o.id", new {idsTable}).ToDictionaryAsync(ord => ord.Id);
     }
   }
 }
