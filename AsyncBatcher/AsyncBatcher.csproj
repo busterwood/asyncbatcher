@@ -33,6 +33,12 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\BusterWood.AsyncBatcher.XML</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>asyncbatcher.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,6 +48,9 @@
     <Compile Include="MultiResultAsyncBatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SingleResultAsyncBatcher.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="asyncbatcher.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
