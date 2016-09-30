@@ -15,7 +15,7 @@ namespace BusterWood.AsyncBatcherTests
         {
             var values = new Dictionary<long, int> { { 1, 2 } };
             int calls = 0;
-            var b = new SingleResultAsyncBatcher<long, int>(keys => { calls++; return Task.FromResult(values); }, TimeSpan.FromMilliseconds(10));
+            var b = new AsyncFuncBatcher<long, int>(keys => { calls++; return Task.FromResult(values); }, TimeSpan.FromMilliseconds(10));
             var result = await b.QueryAsync(1);
             Assert.AreEqual(2, result);
             Assert.AreEqual(1, calls);
@@ -26,7 +26,7 @@ namespace BusterWood.AsyncBatcherTests
         {
             var values = new Dictionary<long, int> { { 1, 2 }, { 2, 3 } };
             int calls = 0;
-            var b = new SingleResultAsyncBatcher<long, int>(keys => { calls++; return Task.FromResult(values); }, TimeSpan.FromMilliseconds(10));
+            var b = new AsyncFuncBatcher<long, int>(keys => { calls++; return Task.FromResult(values); }, TimeSpan.FromMilliseconds(10));
             var tasks = new[] { b.QueryAsync(1), b.QueryAsync(2) };
             await Task.WhenAll(tasks);
             Assert.AreEqual(2, tasks[0].Result);
@@ -42,7 +42,7 @@ namespace BusterWood.AsyncBatcherTests
                 new Dictionary<long, int> { { 2, 3 } },
             };
             int calls = 0;
-            var b = new SingleResultAsyncBatcher<long, int>(keys => Task.FromResult(values[calls++]), TimeSpan.FromMilliseconds(10));
+            var b = new AsyncFuncBatcher<long, int>(keys => Task.FromResult(values[calls++]), TimeSpan.FromMilliseconds(10));
             Assert.AreEqual(2, await b.QueryAsync(1));
             Assert.AreEqual(3, await b.QueryAsync(2));
             Assert.AreEqual(2, calls);
@@ -52,7 +52,7 @@ namespace BusterWood.AsyncBatcherTests
         public void any_exception_caught_by_the_batch_query_is_returned_to_all_query_tasks()
         {
             var exception = new Exception("whoops");
-            var b = new SingleResultAsyncBatcher<long, int>(keys => { throw exception; }, TimeSpan.FromMilliseconds(50));
+            var b = new AsyncFuncBatcher<long, int>(keys => { throw exception; }, TimeSpan.FromMilliseconds(50));
             var tasks = new[] { b.QueryAsync(1), b.QueryAsync(2) };
             foreach (var t in tasks)
             {

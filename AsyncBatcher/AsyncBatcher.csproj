@@ -44,10 +44,11 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncActionBatcher.cs" />
+    <Compile Include="AsyncFuncBatcher.cs" />
+    <Compile Include="AsyncFuncManyBatcher.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="MultiResultAsyncBatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SingleResultAsyncBatcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="AsyncBatcher.nuspec" />
