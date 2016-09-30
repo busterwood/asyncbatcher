@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BusterWood.AsyncBatcher
 {
-    /// <summary>Batches calls to the <see cref="QueryAsync(TKey)"/> method, which a single item per key</summary>
-    public class SingleResultAsyncBatcher<TKey, TValue>
+    /// <summary>Batches calls to the <see cref="QueryAsync(TKey)"/> method, which returns a single item per key</summary>
+    public class AsyncFuncBatcher<TKey, TValue>
     {
         readonly TimeSpan _delay = TimeSpan.FromMilliseconds(100);
         readonly object _gate = new object();
@@ -23,7 +23,7 @@ namespace BusterWood.AsyncBatcher
         /// <summary>Creates a batcher</summary>
         /// <param name="queryMany">The function to call to get the results for a set of keys</param>
         /// <param name="delay">Optional batching delay, defaults to 100ms</param>
-        public SingleResultAsyncBatcher(Func<IReadOnlyCollection<TKey>, Task<Dictionary<TKey, TValue>>> queryMany, TimeSpan? delay = null)
+        public AsyncFuncBatcher(Func<IReadOnlyCollection<TKey>, Task<Dictionary<TKey, TValue>>> queryMany, TimeSpan? delay = null)
         {
             if (queryMany == null) throw new ArgumentNullException(nameof(queryMany));
             if (delay.HasValue && delay.Value <= TimeSpan.Zero) throw new ArgumentOutOfRangeException(nameof(delay));

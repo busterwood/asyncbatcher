@@ -1,5 +1,6 @@
 # AsyncBatcher
-Batches multiple async calls into one or more batched calls, which is useful for batching together database reads.
+
+A .NET 4.5 library for batching multiple async calls into less batched calls, which is useful for batching together remote calls, e.g. database reads.
 
 Batching database calls helps in three ways:
 
@@ -35,7 +36,7 @@ public class OrderDataAccess
 
 The `FindByIdAsync` is fine for one-at-a-time order loading, but what if you had hunderds or thousands of asynchonous tasks all reading at the same time?  This is where async batching comes in, grouping to together calls for efficency based on batching time, e.g. group toegther calls for 100ms (the default).  
 
-Using `SingleResultAsyncBatcher` or `MultiResultAsyncBatcher` you can reduce thousands of database calls into tens of calls.
+Using `AsyncFuncBatcher` or `AsyncFuncManyBatcher` you can reduce thousands of database calls into tens of calls.
 
 Here is an example of batching the above OrderDataAccess call:
 
@@ -46,12 +47,12 @@ using BusterWood.Mapper; // easy reading and mapping from the database
 public class OrderDataAccess 
 {
   private readonly _connectionString;
-  private readonly SingleResultAsyncBatcher<int, Order> _orderBatcher;
+  private readonly AsyncFuncBatcher<int, Order> _orderBatcher;
   
   public OrderDataAccess(string connectionString)
   {
     _connectionString = connectionString;
-    _orderBatcher = new SingleResultAsyncBatcher<int, Order>(ids => FindByManyIdsAsync(ids));
+    _orderBatcher = new AsyncFuncBatcher<int, Order>(ids => FindByManyIdsAsync(ids));
   }
   
   public async Task<Order> FindByIdAsync(int orderId) 
@@ -72,3 +73,11 @@ public class OrderDataAccess
   }
 }
 ```
+
+There is also a class for batching together asynchonous actions `AsyncActionBatcher<T>`, which can be used to group together actions into batches.
+This may be useful for sending one batched message rather than a lots of smaller messages.
+
+Gotchas
+-------
+
+Please be aware of that these batchers will _not_ work with ambient transactions, i.e. `System.Transactions`.

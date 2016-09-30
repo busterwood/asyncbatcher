@@ -16,7 +16,7 @@ namespace BusterWood.AsyncBatcherTests
         {
             var values = new [] { new KeyValuePair<long, int>(1, 2), new KeyValuePair<long, int>( 1, 3 ) }.ToLookup(pair => pair.Key, pair => pair.Value);
             int calls = 0;
-            var b = new MultiResultAsyncBatcher<long, int>(keys => { calls++; return Task.FromResult(values); }, TimeSpan.FromMilliseconds(10));
+            var b = new AsyncFuncManyBatcher<long, int>(keys => { calls++; return Task.FromResult(values); }, TimeSpan.FromMilliseconds(10));
             IEnumerable<int> result = await b.QueryAsync(1);
             Assert.IsTrue(Enumerable.SequenceEqual(new[] { 2, 3 }, result));
             Assert.AreEqual(1, calls);
@@ -27,7 +27,7 @@ namespace BusterWood.AsyncBatcherTests
         {
             var values = new Dictionary<long, int> { { 1, 2 }, { 2, 3 } }.ToLookup(pair => pair.Key, pair => pair.Value);
             int calls = 0;
-            var b = new MultiResultAsyncBatcher<long, int>(keys => { calls++; return Task.FromResult(values); }, TimeSpan.FromMilliseconds(10));
+            var b = new AsyncFuncManyBatcher<long, int>(keys => { calls++; return Task.FromResult(values); }, TimeSpan.FromMilliseconds(10));
             var tasks = new[] { b.QueryAsync(1), b.QueryAsync(2) };
             await Task.WhenAll(tasks);
             Assert.IsTrue(Enumerable.SequenceEqual(new[] { 2 }, tasks[0].Result));
@@ -43,7 +43,7 @@ namespace BusterWood.AsyncBatcherTests
                 new Dictionary<long, int> { { 2, 3 } }.ToLookup(pair => pair.Key, pair => pair.Value),
             };
             int calls = 0;
-            var b = new MultiResultAsyncBatcher<long, int>(keys => Task.FromResult(values[calls++]), TimeSpan.FromMilliseconds(10));
+            var b = new AsyncFuncManyBatcher<long, int>(keys => Task.FromResult(values[calls++]), TimeSpan.FromMilliseconds(10));
             Assert.IsTrue(Enumerable.SequenceEqual(new[] { 2 }, await b.QueryAsync(1)));
             Assert.IsTrue(Enumerable.SequenceEqual(new[] { 3 }, await b.QueryAsync(2)));
             Assert.AreEqual(2, calls);
@@ -53,7 +53,7 @@ namespace BusterWood.AsyncBatcherTests
         public void any_exception_caught_by_the_batch_query_is_returned_to_all_query_tasks()
         {
             var exception = new Exception("whoops");
-            var b = new MultiResultAsyncBatcher<long, int>(keys => { throw exception; }, TimeSpan.FromMilliseconds(50));
+            var b = new AsyncFuncManyBatcher<long, int>(keys => { throw exception; }, TimeSpan.FromMilliseconds(50));
             var tasks = new[] { b.QueryAsync(1), b.QueryAsync(2) };
             foreach (var t in tasks)
             {
